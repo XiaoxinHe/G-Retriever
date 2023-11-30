@@ -54,7 +54,7 @@ coverage.xml
 docs/_build/
 
 # dataset
-dataset/
+#dataset/
 
 # logs and results
 logs/

@@ -8,11 +8,11 @@ TAPE_PATH = 'dataset/tape_expla_graphs'
 
 
 class ExplaGraphsDataset(Dataset):
-    def __init__(self,):
+    def __init__(self):
         super().__init__()
 
         self.text = pd.read_csv(f'{TAPE_PATH}/train_dev.tsv', sep='\t')
-        self.prompt = 'Given the explanation graph, do argument 1 and argument 2 support or counter each other? Answer in one word in the form of \'support\' or \'counter\'.\n\nAnswer:'
+        self.prompt = 'Question: Do argument 1 and argument 2 support or counter each other? Answer in one word in the form of \'support\' or \'counter\'.\n\nAnswer:'
         self.graph = None
         self.graph_type = 'Explanation Graph'
 
@@ -23,17 +23,18 @@ class ExplaGraphsDataset(Dataset):
     def __getitem__(self, index):
 
         text = self.text.iloc[index]
-        # desc = f'Argument 1: {text.arg1}\nArgument 2: {text.arg2}\nRelation graph: {text.graph}\n'
-        pyg_data = torch.load(f'{TAPE_PATH}/graph/{index}.pt')
-        question = f'Arguement 1: {text.arg1}\nArguement 2: {text.arg2}\n{self.prompt}'
-        with open(f'{TAPE_PATH}/text/{index}.txt', 'r') as f:
-            desc = f.readlines()
+        graph = torch.load(f'{TAPE_PATH}/graphs/{index}.pt')
+        question = f'Argument 1: {text.arg1}\nArgument 2: {text.arg2}\n{self.prompt}'
+        nodes = pd.read_csv(f'{TAPE_PATH}/nodes/{index}.csv')
+        edges = pd.read_csv(f'{TAPE_PATH}/edges/{index}.csv')
+        desc = nodes.to_csv(index=False)+'\n'+edges.to_csv(index=False)
+
         return {
             'id': index,
             'label': text['label'],
             'desc': desc,
-            'graph': pyg_data,
-            'question': question
+            'graph': graph,
+            'question': question,
         }
 
     def get_idx_split(self):

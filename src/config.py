@@ -2,13 +2,13 @@ import argparse
 
 
 def parse_args_llama():
-    parser = argparse.ArgumentParser(description="GraphLLM")
+    parser = argparse.ArgumentParser(description="G-Retriever")
 
-    parser.add_argument("--model_name", type=str, default='gqa_llm')
-    parser.add_argument("--project", type=str, default="project_GraphPromptTuning")
+    parser.add_argument("--model_name", type=str, default='graph_llm')
+    parser.add_argument("--project", type=str, default="project_g_retriever")
     parser.add_argument("--seed", type=int, default=0)
 
-    parser.add_argument("--dataset", type=str, default='cora')
+    parser.add_argument("--dataset", type=str, default='gqa_baseline')
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--wd", type=float, default=0.05)
     parser.add_argument("--patience", type=float, default=2)
@@ -27,10 +27,9 @@ def parse_args_llama():
     # LLM related
     parser.add_argument("--llm_model_name", type=str, default='7b')
     parser.add_argument("--llm_model_path", type=str, default='')
-    parser.add_argument("--llm_prompt_type", type=str, default='graph')
     parser.add_argument("--llm_frozen", type=str, default='True')
-    parser.add_argument("--llm_num_virtual_tokens", type=int, default=1)
-    parser.add_argument("--output_dir", type=str, default='/home/xiaoxin/GraphPromptTuning/output')
+    parser.add_argument("--llm_num_virtual_tokens", type=int, default=10)
+    parser.add_argument("--output_dir", type=str, default='output')
     parser.add_argument("--max_txt_len", type=int, default=512)
     parser.add_argument("--max_new_tokens", type=int, default=32)
 

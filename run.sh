@@ -1,43 +1,34 @@
-dataset=cora
-# InferenceLLM
-# python inference.py --model_name InferenceLLM --dataset $dataset --seed 0
-# python inference.py --model_name InferenceLLM --dataset $dataset --seed 1
-# python inference.py --model_name InferenceLLM --dataset $dataset --seed 2
-# python inference.py --model_name InferenceLLM --dataset $dataset --seed 3
+for seed in 0 1 2 3 
+do
+# 1) inference only
+python inference.py --dataset expla_graphs --model_name inference_ll --llm_model_name 7b_chat --seed $seed
+python inference.py --dataset scene_graphs --model_name inference_ll --llm_model_name 7b_chat --seed $seed
+python inference.py --dataset webqsp --model_name inference_ll --llm_model_name 7b_chat --seed $seed
 
-# GraphLLM
-# python train.py --model_name GraphLLM --dataset $dataset --seed 0
-# python train.py --model_name GraphLLM --dataset $dataset --seed 1
-# python train.py --model_name GraphLLM --dataset $dataset --seed 2
-# python train.py --model_name GraphLLM --dataset $dataset --seed 3
+# 2) frozen llm + prompt tuning
+# a) query
+python train.py --dataset expla_graphs --model_name pt_llm --max_txt_len 0 --seed $seed
+python train.py --dataset scene_graphs_baseline --model_name pt_llm --max_txt_len 0 --seed $seed
+python train.py --dataset webqsp_baseline --model_name pt_llm --max_txt_len 0 --seed $seed
 
-# Prompt Tuning
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 0 
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 1
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 2
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 3
+# b) query + textual graph
+python train.py --dataset expla_graphs --model_name pt_llm --seed $seed
+python train.py --dataset scene_graphs --model_name pt_llm --seed $seed
+python train.py --dataset webqsp --model_name pt_llm --seed $seed
 
-# lora 
-python train.py --model_name llm --dataset $dataset  --seed 0
-python train.py --model_name llm --dataset $dataset  --seed 1
-python train.py --model_name llm --dataset $dataset  --seed 2
-python train.py --model_name llm --dataset $dataset  --seed 3
+# c) g-retriever
+python train.py --dataset expla_graphs --model_name graph_llm --seed $seed
+python train.py --dataset scene_graphs --model_name graph_llm --seed $seed
+python train.py --dataset webqsp --model_name graph_llm --seed $seed
 
-# dataset=pubmed
-# # InferenceLLM
-# python inference.py --model_name InferenceLLM --dataset $dataset  --seed 0
-# python inference.py --model_name InferenceLLM --dataset $dataset  --seed 1
-# python inference.py --model_name InferenceLLM --dataset $dataset  --seed 2
-# python inference.py --model_name InferenceLLM --dataset $dataset  --seed 3
+# 3) tuned llm
+# a) finetuning with lora
+python train.py --dataset expla_graphs --model_name llm --llm_frozen False --seed $seed
+python train.py --dataset scene_graphs_baseline --model_name llm --llm_frozen False --seed $seed
+python train.py --dataset webqsp_baseline --model_name llm --llm_frozen False --seed $seed
 
-# # GraphLLM
-# python train.py --model_name GraphLLM --dataset $dataset  --seed 0
-# python train.py --model_name GraphLLM --dataset $dataset  --seed 1
-# python train.py --model_name GraphLLM --dataset $dataset  --seed 2
-# python train.py --model_name GraphLLM --dataset $dataset  --seed 3
-
-# # Prompt Tuning
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 0 
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 1
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 2
-# python train.py --model_name pt_llm --llm_prompt_type text --llm_num_virtual_tokens 10 --dataset $dataset  --seed 3
+# b) g-retriever + finetuning with lora
+python train.py --dataset expla_graphs --model_name graph_llm --llm_frozen False --seed $seed
+python train.py --dataset scene_graphs --model_name graph_llm --llm_frozen False --seed $seed
+python train.py --dataset webqsp --model_name graph_llm --llm_frozen False --seed $seed
+done

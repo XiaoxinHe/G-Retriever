@@ -1,18 +1,22 @@
-import torch
-import numpy as np
 import pandas as pd
-import random
+import torch
 from torch.utils.data import Dataset
-import json
 
 
-class GQADataset(Dataset):
+model_name = 'sbert'
+path = 'dataset/scene_graphs'
+path_nodes = f'{path}/nodes'
+path_edges = f'{path}/edges'
+path_graphs = f'{path}/graphs'
+
+
+class SceneGraphsBaselineDataset(Dataset):
     def __init__(self):
         super().__init__()
-        self.questions = pd.read_csv('dataset/tape_gqa/questions.csv')
-        self.prompt = None
+        self.prompt = 'Please answer the given question.'
         self.graph = None
         self.graph_type = 'Scene Graph'
+        self.questions = pd.read_csv(f'{path}/questions.csv')
 
     def __len__(self):
         """Return the len of the dataset."""
@@ -20,40 +24,36 @@ class GQADataset(Dataset):
 
     def __getitem__(self, index):
         data = self.questions.iloc[index]
-
-        # load the scene graph on the fly
         image_id = data['image_id']
-        scene_graph_pyg = torch.load('dataset/tape_gqa/graph/{}.pt'.format(image_id))
+        question = f'Question: {data["question"]}\n\nAnswer:'
+        nodes = pd.read_csv(f'{path_nodes}/{image_id}.csv')
+        edges = pd.read_csv(f'{path_edges}/{image_id}.csv')
+        graph = torch.load(f'{path_graphs}/{image_id}.pt')
+        desc = nodes.to_csv(index=False)+'\n'+edges.to_csv(index=False, columns=['src', 'edge_attr', 'dst'])
 
-        with open('dataset/tape_gqa/text/{}.txt'.format(image_id)) as f:
-            desc = f.readlines()
-
-        question = f'Question: {data["question"]}\nAnswer: '
         return {
-            'id': data['q_id'],
-            'image_id': data['image_id'],
+            'id': index,
             'question': question,
             'label': data['answer'],
-            'full_label': data['full_answer'],
-            'graph': scene_graph_pyg,
             'desc': desc,
+            'graph': graph,
         }
 
     def get_idx_split(self):
 
         # Load the saved indices
-        with open('dataset/tape_gqa/split/train_indices.txt', 'r') as file:
+        with open(f'{path}/split/train_indices.txt', 'r') as file:
             train_indices = [int(line.strip()) for line in file]
-        with open('dataset/tape_gqa/split/val_indices.txt', 'r') as file:
+        with open(f'{path}/split/val_indices.txt', 'r') as file:
             val_indices = [int(line.strip()) for line in file]
-        with open('dataset/tape_gqa/split/test_indices.txt', 'r') as file:
+        with open(f'{path}/split/test_indices.txt', 'r') as file:
             test_indices = [int(line.strip()) for line in file]
 
         return {'train': train_indices, 'val': val_indices, 'test': test_indices}
 
 
 if __name__ == '__main__':
-    dataset = GQADataset()
+    dataset = SceneGraphsBaselineDataset()
 
     data = dataset[0]
     for k, v in data.items():

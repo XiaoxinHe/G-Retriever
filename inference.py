@@ -10,10 +10,12 @@ from src.config import parse_args_llama
 from src.model import load_model, llama_model_path
 from src.dataset import load_dataset
 from src.utils.evaluate import eval_funcs
-from src.utils.collate import collate_funcs
+from src.utils.collate import collate_fn
 
 
 def main(args):
+
+    # Step 1: Set up wandb
     seed = args.seed
     wandb.init(project=f"{args.project}",
                name=f"{args.dataset}_{args.model_name}_seed{seed}",
@@ -27,7 +29,6 @@ def main(args):
 
     # Step 2: Build Node Classification Dataset
     test_dataset = [dataset[i] for i in idx_split['test']]
-    collate_fn = collate_funcs[args.model_name](dataset.graph)
     test_loader = DataLoader(test_dataset, batch_size=args.eval_batch_size, drop_last=False, pin_memory=True, shuffle=False, collate_fn=collate_fn)
 
     # Step 3: Build Model
@@ -38,7 +39,7 @@ def main(args):
     model.eval()
     eval_output = []
     progress_bar_test = tqdm(range(len(test_loader)))
-    for step, batch in enumerate(test_loader):
+    for _, batch in enumerate(test_loader):
         with torch.no_grad():
             output = model.inference(batch)
             eval_output.append(output)
@@ -46,8 +47,8 @@ def main(args):
         progress_bar_test.update(1)
 
     # Step 5. Post-processing & Evaluating
-    os.makedirs(args.output_dir, exist_ok=True)
-    path = f'{args.output_dir}/{args.dataset}_{args.model_name}_{args.llm_model_name}_{args.gnn_model_name}_seed{seed}.csv'
+    os.makedirs(f'{args.output_dir}/{args.dataset}', exist_ok=True)
+    path = f'{args.output_dir}/{args.dataset}/{args.model_name}_{args.llm_model_name}_{args.gnn_model_name}_seed{seed}.csv'
     acc = eval_funcs[args.dataset](eval_output, path)
     print(f'Test Acc {acc}')
     wandb.log({'Test Acc': acc})
