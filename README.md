@@ -1,4 +1,4 @@
-# G-Retriever
+# G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering
 
 ## Citation
 ```
