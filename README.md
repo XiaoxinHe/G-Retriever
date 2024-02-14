@@ -1,5 +1,17 @@
 # G-Retriever
 
+## Citation
+```
+@misc{he2024gretriever,
+      title={G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering}, 
+      author={Xiaoxin He and Yijun Tian and Yifei Sun and Nitesh V. Chawla and Thomas Laurent and Yann LeCun and Xavier Bresson and Bryan Hooi},
+      year={2024},
+      eprint={2402.07630},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
+
 ## Environment setup
 ```
 conda create --name g_retriever python=3.9 -y
