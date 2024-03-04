@@ -1,5 +1,28 @@
 # G-Retriever
 
+[![arXiv](https://img.shields.io/badge/arXiv-2402.07630-b31b1b.svg)](https://arxiv.org/abs/2402.07630)
+
+This repository contains the source code for the paper ["<u>G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering</u>"](https://arxiv.org/abs/2402.07630).
+
+We introduce **G-Retriever**, a flexible question-answering framework targeting real-world textual graphs, applicable to multiple applications including scene graph understanding, common sense reasoning, and knowledge graph reasoning.
+<img src="figs/chat.svg">
+
+**G-Retriever** integrates the strengths of Graph Neural Networks (GNNs), Large Language Models (LLMs), and Retrieval-Augmented Generation (RAG), and can be fine-tuned to enhance graph understanding via soft prompting.
+<img src="figs/overview.svg">
+
+
+## Citation
+```
+@misc{he2024gretriever,
+      title={G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering}, 
+      author={Xiaoxin He and Yijun Tian and Yifei Sun and Nitesh V. Chawla and Thomas Laurent and Yann LeCun and Xavier Bresson and Bryan Hooi},
+      year={2024},
+      eprint={2402.07630},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
+
 ## Environment setup
 ```
 conda create --name g_retriever python=3.9 -y
