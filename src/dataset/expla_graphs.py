@@ -4,14 +4,14 @@ import torch
 from torch.utils.data import Dataset
 
 
-TAPE_PATH = 'dataset/tape_expla_graphs'
+PATH = 'dataset/expla_graphs'
 
 
 class ExplaGraphsDataset(Dataset):
     def __init__(self):
         super().__init__()
 
-        self.text = pd.read_csv(f'{TAPE_PATH}/train_dev.tsv', sep='\t')
+        self.text = pd.read_csv(f'{PATH}/train_dev.tsv', sep='\t')
         self.prompt = 'Question: Do argument 1 and argument 2 support or counter each other? Answer in one word in the form of \'support\' or \'counter\'.\n\nAnswer:'
         self.graph = None
         self.graph_type = 'Explanation Graph'
@@ -23,10 +23,10 @@ class ExplaGraphsDataset(Dataset):
     def __getitem__(self, index):
 
         text = self.text.iloc[index]
-        graph = torch.load(f'{TAPE_PATH}/graphs/{index}.pt')
+        graph = torch.load(f'{PATH}/graphs/{index}.pt')
         question = f'Argument 1: {text.arg1}\nArgument 2: {text.arg2}\n{self.prompt}'
-        nodes = pd.read_csv(f'{TAPE_PATH}/nodes/{index}.csv')
-        edges = pd.read_csv(f'{TAPE_PATH}/edges/{index}.csv')
+        nodes = pd.read_csv(f'{PATH}/nodes/{index}.csv')
+        edges = pd.read_csv(f'{PATH}/edges/{index}.csv')
         desc = nodes.to_csv(index=False)+'\n'+edges.to_csv(index=False)
 
         return {
@@ -40,13 +40,13 @@ class ExplaGraphsDataset(Dataset):
     def get_idx_split(self):
 
         # Load the saved indices
-        with open(f'{TAPE_PATH}/split/train_indices.txt', 'r') as file:
+        with open(f'{PATH}/split/train_indices.txt', 'r') as file:
             train_indices = [int(line.strip()) for line in file]
 
-        with open(f'{TAPE_PATH}/split/val_indices.txt', 'r') as file:
+        with open(f'{PATH}/split/val_indices.txt', 'r') as file:
             val_indices = [int(line.strip()) for line in file]
 
-        with open(f'{TAPE_PATH}/split/test_indices.txt', 'r') as file:
+        with open(f'{PATH}/split/test_indices.txt', 'r') as file:
             test_indices = [int(line.strip()) for line in file]
 
         return {'train': train_indices, 'val': val_indices, 'test': test_indices}

@@ -1,9 +1,9 @@
 for seed in 0 1 2 3 
 do
 # 1) inference only
-python inference.py --dataset expla_graphs --model_name inference_ll --llm_model_name 7b_chat --seed $seed
-python inference.py --dataset scene_graphs --model_name inference_ll --llm_model_name 7b_chat --seed $seed
-python inference.py --dataset webqsp --model_name inference_ll --llm_model_name 7b_chat --seed $seed
+python inference.py --dataset expla_graphs --model_name inference_llm --llm_model_name 7b_chat --seed $seed
+python inference.py --dataset scene_graphs --model_name inference_llm --llm_model_name 7b_chat --seed $seed
+python inference.py --dataset webqsp --model_name inference_llm --llm_model_name 7b_chat --seed $seed
 
 # 2) frozen llm + prompt tuning
 # a) query

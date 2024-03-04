@@ -26,9 +26,17 @@ pip install pcst_fast
 
 ## Data Preprocessing
 ```
+# expla_graphs
 python -m src.dataset.preprocess.expla_graphs
+python -m src.dataset.expla_graphs
+
+# scene_graphs, might take
 python -m src.dataset.preprocess.scene_graphs
+python -m src.dataset.scene_graphs
+
+# webqsp
 python -m src.dataset.preprocess.webqsp
+python -m src.dataset.webqsp
 ```
 
 ## Training
@@ -36,7 +44,7 @@ Replace path to the llm checkpoints in the `src/model/__init__.py`, then run
 
 ### 1) Inference-Only LLM
 ```
-python inference.py --dataset scene_graphs --model_name inference_ll --llm_model_name 7b_chat
+python inference.py --dataset scene_graphs --model_name inference_llm --llm_model_name 7b_chat
 ```
 ### 2) Frozen LLM + Prompt Tuning
 ```
