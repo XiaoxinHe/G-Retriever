@@ -11,7 +11,7 @@ from peft import (
 
 BOS = '<s>[INST]'
 EOS_USER = '[/INST]'
-EOS = '[/s]'
+EOS = '</s>'
 
 IGNORE_INDEX = -100
 
