@@ -40,7 +40,7 @@ def textualize_graph(data):
 
 
 def step_one():
-    dataset = json.load(open('dataset/gqa/sceneGraphs/train_sceneGraphs.json'))
+    dataset = json.load(open('dataset/gqa/train_sceneGraphs.json'))
 
     os.makedirs(path_nodes, exist_ok=True)
     os.makedirs(path_edges, exist_ok=True)
