@@ -14,7 +14,7 @@ def parse_args_llama():
     parser.add_argument("--patience", type=float, default=2)
 
     # Model Training
-    parser.add_argument("--batch_size", type=int, default=4)
+    parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--grad_steps", type=int, default=2)
 
     # Learning Rate Scheduler
@@ -22,7 +22,7 @@ def parse_args_llama():
     parser.add_argument("--warmup_epochs", type=float, default=1)
 
     # Inference
-    parser.add_argument("--eval_batch_size", type=int, default=8)
+    parser.add_argument("--eval_batch_size", type=int, default=16)
 
     # LLM related
     parser.add_argument("--llm_model_name", type=str, default='7b')
