@@ -48,7 +48,7 @@ def main(args):
 
     # Step 5. Post-processing & Evaluating
     os.makedirs(f'{args.output_dir}/{args.dataset}', exist_ok=True)
-    path = f'{args.output_dir}/{args.dataset}/{args.model_name}_{args.llm_model_name}_{args.gnn_model_name}_seed{seed}.csv'
+    path = f'{args.output_dir}/{args.dataset}/model_name_{args.model_name}_llm_model_name_{args.llm_model_name}_llm_frozen_{args.llm_frozen}_max_txt_len_{args.max_txt_len}_max_new_tokens_{args.max_new_tokens}_gnn_model_name_{args.gnn_model_name}_patience_{args.patience}_num_epochs_{args.num_epochs}_seed{seed}.csv'
     acc = eval_funcs[args.dataset](eval_output, path)
     print(f'Test Acc {acc}')
     wandb.log({'Test Acc': acc})
