@@ -1,11 +1,12 @@
 import os
 import json
 import pandas as pd
+import numpy as np
 from tqdm import tqdm
 import torch
 from torch_geometric.data.data import Data
 from src.utils.lm_modeling import load_model, load_text2embedding
-from src.dataset.preprocess.generate_split import generate_split
+from sklearn.model_selection import train_test_split
 
 
 model_name = 'sbert'
@@ -76,7 +77,46 @@ def step_two():
     _encode_graphs()
 
 
+def generate_split():
+
+    # Load the data
+    path = "dataset/scene_graphs"
+    questions = pd.read_csv(f"{path}/questions.csv")
+
+    # Create a unique list of image IDs
+    unique_image_ids = questions['image_id'].unique()
+
+    # Shuffle the image IDs
+    np.random.seed(42)  # For reproducibility
+    shuffled_image_ids = np.random.permutation(unique_image_ids)
+
+    # Split the image IDs into train, validation, and test sets
+    train_ids, temp_ids = train_test_split(shuffled_image_ids, test_size=0.4, random_state=42)  # 60% train, 40% temporary
+    val_ids, test_ids = train_test_split(temp_ids, test_size=0.5, random_state=42)  # Split the 40% into two 20% splits
+
+    # Create a mapping from image ID to set label
+    id_to_set = {image_id: 'train' for image_id in train_ids}
+    id_to_set.update({image_id: 'val' for image_id in val_ids})
+    id_to_set.update({image_id: 'test' for image_id in test_ids})
+
+    # Map the sets back to the original DataFrame
+    questions['set'] = questions['image_id'].map(id_to_set)
+
+    # Create the final train, validation, and test DataFrames
+    train_df = questions[questions['set'] == 'train']
+    val_df = questions[questions['set'] == 'val']
+    test_df = questions[questions['set'] == 'test']
+
+    # Create a folder for the split
+    os.makedirs(f'{path}/split', exist_ok=True)
+
+    # Writing the indices to text files
+    train_df.index.to_series().to_csv(f'{path}/split/train_indices.txt', index=False, header=False)
+    val_df.index.to_series().to_csv(f'{path}/split/val_indices.txt', index=False, header=False)
+    test_df.index.to_series().to_csv(f'{path}/split/test_indices.txt', index=False, header=False)
+
+
 if __name__ == '__main__':
     step_one()
     step_two()
-    generate_split(100000, f'{path}/split')
+    generate_split()
