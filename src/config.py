@@ -8,7 +8,7 @@ def parse_args_llama():
     parser.add_argument("--project", type=str, default="project_g_retriever")
     parser.add_argument("--seed", type=int, default=0)
 
-    parser.add_argument("--dataset", type=str, default='gqa_baseline')
+    parser.add_argument("--dataset", type=str, default='expla_graphs')
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--wd", type=float, default=0.05)
     parser.add_argument("--patience", type=float, default=2)
@@ -34,7 +34,7 @@ def parse_args_llama():
     parser.add_argument("--max_new_tokens", type=int, default=32)
 
     # GNN related
-    parser.add_argument("--gnn_model_name", type=str, default='gat')
+    parser.add_argument("--gnn_model_name", type=str, default='gt')
     parser.add_argument("--gnn_num_layers", type=int, default=4)
     parser.add_argument("--gnn_in_dim", type=int, default=1024)
     parser.add_argument("--gnn_hidden_dim", type=int, default=1024)

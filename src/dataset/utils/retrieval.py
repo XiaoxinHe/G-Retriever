@@ -38,7 +38,7 @@ def retrieval_via_pcst(graph, q_emb, textual_nodes, textual_edges, topk=3, topk_
             e_prizes[indices] = value
             last_topk_e_value = value*(1-c)
         # reduce the cost of the edges such that at least one edge is selected
-        # cost_e = min(cost_e, e_prizes.max().item()*(1-c/2))
+        cost_e = min(cost_e, e_prizes.max().item()*(1-c/2))
     else:
         e_prizes = torch.zeros(graph.num_edges)
 
