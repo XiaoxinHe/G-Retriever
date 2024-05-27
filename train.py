@@ -3,6 +3,8 @@ import wandb
 import gc
 from tqdm import tqdm
 import torch
+import json
+import pandas as pd
 from torch.utils.data import DataLoader
 from torch.nn.utils import clip_grad_norm_
 
@@ -113,21 +115,24 @@ def main(args):
     torch.cuda.reset_max_memory_allocated()
 
     # Step 5. Evaluating
-    model = _reload_best_model(model, args)
-    model.eval()
-    eval_output = []
-    progress_bar_test = tqdm(range(len(test_loader)))
-    for step, batch in enumerate(test_loader):
-        with torch.no_grad():
-            output = model.inference(batch)
-            eval_output.append(output)
-
-        progress_bar_test.update(1)
-
-    # Step 6. Post-processing & compute metrics
     os.makedirs(f'{args.output_dir}/{args.dataset}', exist_ok=True)
     path = f'{args.output_dir}/{args.dataset}/model_name_{args.model_name}_llm_model_name_{args.llm_model_name}_llm_frozen_{args.llm_frozen}_max_txt_len_{args.max_txt_len}_max_new_tokens_{args.max_new_tokens}_gnn_model_name_{args.gnn_model_name}_patience_{args.patience}_num_epochs_{args.num_epochs}_seed{seed}.csv'
-    acc = eval_funcs[args.dataset](eval_output, path)
+    print(f'path: {path}')
+
+    model = _reload_best_model(model, args)
+    model.eval()
+    progress_bar_test = tqdm(range(len(test_loader)))
+    with open(path, "w") as f:
+        for step, batch in enumerate(test_loader):
+            with torch.no_grad():
+                output = model.inference(batch)
+                df = pd.DataFrame(output)
+                for _, row in df.iterrows():
+                    f.write(json.dumps(dict(row)) + "\n")
+            progress_bar_test.update(1)
+
+    # Step 6. Post-processing & compute metrics
+    acc = eval_funcs[args.dataset](path)
     print(f'Test Acc {acc}')
     wandb.log({'Test Acc': acc})
 
