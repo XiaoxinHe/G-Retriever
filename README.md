@@ -69,7 +69,7 @@ python inference.py --dataset scene_graphs --model_name inference_llm --llm_mode
 ```
 ### 2) Frozen LLM + Prompt Tuning
 ```
-# promot tuning
+# prompt tuning
 python train.py --dataset scene_graphs_baseline --model_name pt_llm
 
 # G-Retriever
