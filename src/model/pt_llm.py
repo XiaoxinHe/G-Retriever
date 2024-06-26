@@ -6,7 +6,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import (
     LoraConfig,
     get_peft_model,
-    prepare_model_for_int8_training,
+    # prepare_model_for_int8_training,
+    prepare_model_for_kbit_training
 )
 
 BOS = '<s>[INST]'
@@ -52,7 +53,8 @@ class PromptTuningLLM(torch.nn.Module):
                 param.requires_grad = False
         else:
             print("Training LLAMA with LORA!")
-            model = prepare_model_for_int8_training(model)
+            # model = prepare_model_for_int8_training(model)
+            model = prepare_model_for_kbit_training(model)
 
             lora_r: int = 8
             lora_alpha: int = 16
