@@ -10,16 +10,16 @@ We introduce **G-Retriever**, a flexible question-answering framework targeting 
 **G-Retriever** integrates the strengths of Graph Neural Networks (GNNs), Large Language Models (LLMs), and Retrieval-Augmented Generation (RAG), and can be fine-tuned to enhance graph understanding via soft prompting.
 <img src="figs/overview.svg">
 
+## News
+[2024.09] [PyG 2.6](https://github.com/pyg-team/pytorch_geometric/releases/tag/2.6.0) now supports **G-Retriever**! 🎉 \[[Dataset](https://pytorch-geometric.readthedocs.io/en/latest/_modules/torch_geometric/datasets/web_qsp_dataset.html)\]\[[Model](https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.nn.models.GRetriever.html?highlight=gretriever)\]
 
 ## Citation
 ```
-@misc{he2024gretriever,
-      title={G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering}, 
-      author={Xiaoxin He and Yijun Tian and Yifei Sun and Nitesh V. Chawla and Thomas Laurent and Yann LeCun and Xavier Bresson and Bryan Hooi},
-      year={2024},
-      eprint={2402.07630},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@article{he2024g,
+  title={G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering},
+  author={He, Xiaoxin and Tian, Yijun and Sun, Yifei and Chawla, Nitesh V and Laurent, Thomas and LeCun, Yann and Bresson, Xavier and Hooi, Bryan},
+  journal={arXiv preprint arXiv:2402.07630},
+  year={2024}
 }
 ```
 
@@ -72,7 +72,7 @@ python inference.py --dataset scene_graphs --model_name inference_llm --llm_mode
 ```
 ### 2) Frozen LLM + Prompt Tuning
 ```
-# promot tuning
+# prompt tuning
 python train.py --dataset scene_graphs_baseline --model_name pt_llm
 
 # G-Retriever

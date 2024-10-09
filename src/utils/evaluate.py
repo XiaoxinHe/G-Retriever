@@ -4,16 +4,8 @@ import re
 import string
 
 
-def get_accuracy_gqa(eval_output, path):
-
-    # eval_output is a list of dicts
-    df = pd.concat([pd.DataFrame(d) for d in eval_output])
-
-    # save to csv
-    with open(path, "w") as f:
-        for _, row in df.iterrows():
-            f.write(json.dumps(dict(row)) + "\n")
-
+def get_accuracy_gqa(path):
+    df = pd.read_json(path, lines=True)
     # compute accuracy
     correct = 0
     for pred, label in zip(df["pred"], df["label"]):
@@ -22,14 +14,8 @@ def get_accuracy_gqa(eval_output, path):
     return correct / len(df)
 
 
-def get_accuracy_expla_graphs(eval_output, path):
-
-    # eval_output is a list of dicts
-    df = pd.concat([pd.DataFrame(d) for d in eval_output])
-    with open(path, "w") as f:
-        for _, row in df.iterrows():
-            f.write(json.dumps(dict(row)) + "\n")
-
+def get_accuracy_expla_graphs(path):
+    df = pd.read_json(path, lines=True)
     # compute accuracy
     correct = 0
     for pred, label in zip(df["pred"], df["label"]):
@@ -89,11 +75,8 @@ def eval_hit(prediction, answer):
     return 0
 
 
-def get_accuracy_webqsp(eval_output, path):
-    df = pd.concat([pd.DataFrame(d) for d in eval_output])
-    with open(path, "w") as f:
-        for _, row in df.iterrows():
-            f.write(json.dumps(dict(row)) + "\n")
+def get_accuracy_webqsp(path):
+    df = pd.read_json(path, lines=True)
 
     # Load results
     acc_list = []
