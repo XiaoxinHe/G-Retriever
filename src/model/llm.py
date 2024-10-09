@@ -5,7 +5,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import (
     LoraConfig,
     get_peft_model,
-    prepare_model_for_int8_training,
+    prepare_model_for_kbit_training,
 )
 
 BOS = '<s>[INST]'
@@ -28,7 +28,7 @@ class LLM(torch.nn.Module):
 
         print('Loading LLAMA')
         kwargs = {
-            "max_memory": {0: '80GiB', 1: '80GiB'},
+            "max_memory": {i: f'{size}GiB' for i, size in enumerate(args.max_memory)},
             "device_map": "auto",
             "revision": "main",
         }
@@ -49,7 +49,7 @@ class LLM(torch.nn.Module):
                 param.requires_grad = False
         else:
             print("Training LLAMA with LORA!")
-            model = prepare_model_for_int8_training(model)
+            model = prepare_model_for_kbit_training(model)
 
             lora_r: int = 8
             lora_alpha: int = 16

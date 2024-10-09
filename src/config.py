@@ -1,5 +1,7 @@
 import argparse
 
+def csv_list(string):
+    return string.split(',')
 
 def parse_args_llama():
     parser = argparse.ArgumentParser(description="G-Retriever")
@@ -32,6 +34,7 @@ def parse_args_llama():
     parser.add_argument("--output_dir", type=str, default='output')
     parser.add_argument("--max_txt_len", type=int, default=512)
     parser.add_argument("--max_new_tokens", type=int, default=32)
+    parser.add_argument("--max_memory", type=csv_list, default=[80,80])
 
     # GNN related
     parser.add_argument("--gnn_model_name", type=str, default='gat')
