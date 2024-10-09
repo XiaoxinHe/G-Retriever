@@ -44,7 +44,8 @@ pip install sentencepiece
 pip install torch_geometric
 pip install datasets
 pip install pcst_fast
-
+pip install gensim
+pip install scipy=1.12
 ```
 
 ## Data Preprocessing
