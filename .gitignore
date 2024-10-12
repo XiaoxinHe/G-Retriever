@@ -55,6 +55,10 @@ docs/_build/
 
 # dataset
 #dataset/
+dataset/**/[0-9]*.csv
+dataset/**/*.pt
+dataset/gqa/val_sceneGraphs.json
+dataset/gqa/train_sceneGraphs.json
 
 # logs and results
 logs/
