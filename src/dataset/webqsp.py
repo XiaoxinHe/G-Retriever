@@ -68,9 +68,13 @@ def preprocess():
     for index in tqdm(range(len(dataset))):
         if os.path.exists(f'{cached_graph}/{index}.pt'):
             continue
-        graph = torch.load(f'{path_graphs}/{index}.pt')
+
         nodes = pd.read_csv(f'{path_nodes}/{index}.csv')
         edges = pd.read_csv(f'{path_edges}/{index}.csv')
+        if len(nodes) == 0:
+            print(f'Empty graph at index {index}')
+            continue
+        graph = torch.load(f'{path_graphs}/{index}.pt')
         q_emb = q_embs[index]
         subg, desc = retrieval_via_pcst(graph, q_emb, nodes, edges, topk=3, topk_e=5, cost_e=0.5)
         torch.save(subg, f'{cached_graph}/{index}.pt')
