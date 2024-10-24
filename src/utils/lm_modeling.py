@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 
 pretrained_repo = 'sentence-transformers/all-roberta-large-v1'
-batch_size = 256  # Adjust the batch size as needed
+batch_size = 1024  # Adjust the batch size as needed
 
 
 # replace with the path to the word2vec file
@@ -96,42 +96,43 @@ def load_sbert():
     model = Sentence_Transformer(pretrained_repo)
     tokenizer = AutoTokenizer.from_pretrained(pretrained_repo)
 
+    # data parallel
+    if torch.cuda.device_count() > 1:
+        print(f'Using {torch.cuda.device_count()} GPUs')
+        model = nn.DataParallel(model)
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-
     model.eval()
     return model, tokenizer, device
 
 
 def sber_text2embedding(model, tokenizer, device, text):
-    try:
-        encoding = tokenizer(text, padding=True, truncation=True, return_tensors='pt')
-        dataset = Dataset(input_ids=encoding.input_ids, attention_mask=encoding.attention_mask)
 
-        # DataLoader
-        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+    encoding = tokenizer(text, padding=True, truncation=True, return_tensors='pt')
+    dataset = Dataset(input_ids=encoding.input_ids, attention_mask=encoding.attention_mask)
 
-        # Placeholder for storing the embeddings
-        all_embeddings = []
+    # DataLoader
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
-        # Iterate through batches
-        with torch.no_grad():
+    # Placeholder for storing the embeddings
+    all_embeddings = []
 
-            for batch in dataloader:
-                # Move batch to the appropriate device
-                batch = {key: value.to(device) for key, value in batch.items()}
+    # Iterate through batches
+    with torch.no_grad():
 
-                # Forward pass
-                embeddings = model(input_ids=batch["input_ids"], att_mask=batch["att_mask"])
+        for batch in dataloader:
+            # Move batch to the appropriate device
+            batch = {key: value.to(device) for key, value in batch.items()}
 
-                # Append the embeddings to the list
-                all_embeddings.append(embeddings)
+            # Forward pass
+            embeddings = model(input_ids=batch["input_ids"], att_mask=batch["att_mask"])
 
-        # Concatenate the embeddings from all batches
-        all_embeddings = torch.cat(all_embeddings, dim=0).cpu()
+            # Append the embeddings to the list
+            all_embeddings.append(embeddings)
 
-    except:
-        return torch.zeros((0, 1024))
+    # Concatenate the embeddings from all batches
+    all_embeddings = torch.cat(all_embeddings, dim=0).cpu()
 
     return all_embeddings
 

@@ -42,12 +42,15 @@ def step_one():
 
 
 def generate_split():
-    
+
     dataset = load_dataset("rmanluo/RoG-webqsp")
 
     train_indices = np.arange(len(dataset['train']))
     val_indices = np.arange(len(dataset['validation'])) + len(dataset['train'])
     test_indices = np.arange(len(dataset['test'])) + len(dataset['train']) + len(dataset['validation'])
+
+    # Fix bug: remove the indices of the empty graphs from the val indices
+    val_indices = [i for i in val_indices if i != 2937]
 
     print("# train samples: ", len(train_indices))
     print("# val samples: ", len(val_indices))
@@ -68,6 +71,7 @@ def generate_split():
 
 
 def step_two():
+    print('Loading dataset...')
     dataset = load_dataset("rmanluo/RoG-webqsp")
     dataset = concatenate_datasets([dataset['train'], dataset['validation'], dataset['test']])
     questions = [i['question'] for i in dataset]
@@ -88,6 +92,9 @@ def step_two():
         nodes = pd.read_csv(f'{path_nodes}/{index}.csv')
         edges = pd.read_csv(f'{path_edges}/{index}.csv')
         nodes.node_attr.fillna("", inplace=True)
+        if len(nodes) == 0:
+            print(f'Empty graph at index {index}')
+            continue
         x = text2embedding(model, tokenizer, device, nodes.node_attr.tolist())
 
         # edges
