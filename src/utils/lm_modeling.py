@@ -108,6 +108,8 @@ def load_sbert():
 
 
 def sber_text2embedding(model, tokenizer, device, text):
+    if len(text) == 0:
+        return torch.zeros((0, 1024))
 
     encoding = tokenizer(text, padding=True, truncation=True, return_tensors='pt')
     dataset = Dataset(input_ids=encoding.input_ids, attention_mask=encoding.attention_mask)

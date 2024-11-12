@@ -62,6 +62,9 @@ def step_two():
         for i in tqdm(image_ids):
             nodes = pd.read_csv(f'{path_nodes}/{i}.csv')
             edges = pd.read_csv(f'{path_edges}/{i}.csv')
+            if len(nodes) == 0:
+                print(f'Empty graph, skipping image id {i}')
+                continue
             node_attr = text2embedding(model, tokenizer, device, nodes.node_attr.tolist())
             edge_attr = text2embedding(model, tokenizer, device, edges.edge_attr.tolist())
             edge_index = torch.tensor([edges.src, edges.dst]).long()
