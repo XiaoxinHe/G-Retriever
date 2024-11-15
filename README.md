@@ -45,8 +45,23 @@ pip install torch_geometric
 pip install datasets
 pip install pcst_fast
 pip install gensim
-pip install scipy=1.12
+pip install scipy==1.12
+pip install protobuf
 ```
+
+## Download the Llama 2 Model
+1. Go to Hugging Face: https://huggingface.co/meta-llama/Llama-2-7b-hf. You will need to share your contact information with Meta to access this model.
+2. Sign up for a Hugging Face account (if you don’t already have one).
+3. Generate an access token: https://huggingface.co/docs/hub/en/security-tokens.
+4. Add your token to the code file as follows:
+  ```
+  From transformers import AutoModel
+  access_token = "hf_..."
+  model = AutoModel.from_pretrained("private/model", token=access_token)
+  ```
+
+
+
 
 ## Data Preprocessing
 ```
