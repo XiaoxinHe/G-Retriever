@@ -15,11 +15,13 @@ We introduce **G-Retriever**, a flexible question-answering framework targeting 
 
 ## Citation
 ```
-@article{he2024g,
-  title={G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering},
-  author={He, Xiaoxin and Tian, Yijun and Sun, Yifei and Chawla, Nitesh V and Laurent, Thomas and LeCun, Yann and Bresson, Xavier and Hooi, Bryan},
-  journal={arXiv preprint arXiv:2402.07630},
-  year={2024}
+@inproceedings{
+he2024gretriever,
+title={G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering},
+author={Xiaoxin He and Yijun Tian and Yifei Sun and Nitesh V Chawla and Thomas Laurent and Yann LeCun and Xavier Bresson and Bryan Hooi},
+booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
+year={2024},
+url={https://openreview.net/forum?id=MPJ3oXtTZl}
 }
 ```
 
